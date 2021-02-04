@@ -1,5 +1,11 @@
 # @backstage/plugin-kubernetes
 
+## 0.3.9
+
+### Patch Changes
+
+- 64b9efac2: Migrate to new composability API, exporting the plugin instance as `kubernetesPlugin` and entity content as `EntityKubernetesContent`.
+
 ## 0.3.8
 
 ### Patch Changes
