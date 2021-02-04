@@ -24,6 +24,7 @@ import { ReadTreeResponseFactory } from './tree';
 export type UrlReader = {
   read(url: string): Promise<Buffer>;
   readTree(url: string, options?: ReadTreeOptions): Promise<ReadTreeResponse>;
+  search(url: string, options?: SearchOptions): Promise<SearchResponse>;
 };
 
 export type UrlReaderPredicateTuple = {
@@ -97,7 +98,40 @@ export type ReadTreeResponseDirOptions = {
 };
 
 /**
- * Represents a single file in a response.
+ * An options object for search operations.
+ */
+export type SearchOptions = {
+  /**
+   * An etag can be provided to check whether the search response has changed from a previous execution.
+   *
+   * In the search() response, an etag is returned along with the files. The etag is a unique identifer
+   * of the current tree, usually the commit SHA or etag from the target.
+   *
+   * When an etag is given in SearchOptions, search will first compare the etag against the etag
+   * on the target branch. If they match, search will throw a NotModifiedError indicating that the search
+   * response will not differ from the previous response which included this particular etag. If they mismatch,
+   * search will return the rest of SearchResponse along with a new etag.
+   */
+  etag?: string;
+};
+
+/**
+ * The output of a search operation.
+ */
+export type SearchResponse = {
+  /**
+   * The files that matched the search query.
+   */
+  files: ResponseFile[];
+
+  /**
+   * A unique identifer of the current remote tree, usually the commit SHA or etag from the target.
+   */
+  etag: string;
+};
+
+/**
+ * Represents a single file in a tree or search response.
  */
 export type ResponseFile = {
   path: string;
