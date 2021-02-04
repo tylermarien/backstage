@@ -253,6 +253,42 @@ export async function getTeamMembers(
   return { members };
 }
 
+/**
+ * Gets all the users out of a GitHub organization.
+ *
+ * Note that the users will not have their memberships filled in.
+ *
+ * @param client An octokit graphql client
+ * @param org The slug of the org to read
+ * @param teamSlug The slug of the team to read
+ */
+export async function getRepositoryDetails(
+  client: typeof graphql,
+  owner: string,
+  name: string,
+): Promise<GitHubRepository> {
+  const query = `
+    query repository($owner: String!, $name: String!) {
+      repository(owner: $owner, name: $name) {
+        name
+        description
+        primaryLanguage {
+          name
+        }
+      }
+    }`;
+
+  const response = await client(query, { owner, name });
+
+  return response.repository;
+}
+
+export interface GitHubRepository {
+  name: string;
+  description: string;
+  primaryLanguage?: { name: string };
+}
+
 //
 // Helpers
 //

@@ -253,7 +253,9 @@ export class CatalogBuilder {
       locationReader,
       logger,
     );
-    const locationAnalyzer = new RepoLocationAnalyzer(logger);
+    const locationAnalyzer = RepoLocationAnalyzer.fromConfig(config, {
+      logger,
+    });
 
     return {
       entitiesCatalog,
