@@ -19,6 +19,7 @@ import { DiscoveryApi, OAuthApi, ConfigApi } from '@backstage/core';
 import { CatalogImportApi } from './CatalogImportApi';
 import { PartialEntity } from '../util/types';
 import { GitHubIntegrationConfig } from '@backstage/integration';
+import { Base64 } from 'js-base64';
 
 export class CatalogImportClient implements CatalogImportApi {
   private readonly discoveryApi: DiscoveryApi;
@@ -200,7 +201,7 @@ export class CatalogImportClient implements CatalogImportApi {
         repo,
         path: fileName,
         message: `Add ${fileName} config file`,
-        content: btoa(fileContent),
+        content: Base64.encode(fileContent),
         branch: branchName,
       })
       .catch(e => {
